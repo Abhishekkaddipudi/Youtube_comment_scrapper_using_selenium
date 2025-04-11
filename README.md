@@ -191,3 +191,20 @@ After scraping and analyzing the comments from a popular KSI video, here are the
 
 ---
 
+## ⚙️ How to Set Up Ollama Locally
+
+Ollama allows you to run large language models locally with ease.
+
+### 1. 🖥 Install Ollama
+
+Download and install Ollama from the official website:  
+👉 [https://ollama.com](https://ollama.com)
+
+Choose your platform (macOS, Linux, Windows) and follow the installer instructions.
+
+### 2. 📦 Pull a Model
+
+You can pull any model like LLaMA 3.2:
+
+```bash
+ollama pull llama3.2
