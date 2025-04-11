@@ -68,7 +68,7 @@ pip install selenium requests
 ## ▶️ Running the Scraper
 
 ```bash
-python youtube_scraper.py
+python main.py
 ```
 
 Then paste a YouTube video URL when prompted.
