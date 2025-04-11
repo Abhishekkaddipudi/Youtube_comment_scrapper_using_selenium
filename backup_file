@@ -1,0 +1,154 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
+import json
+
+
+def count_json_length(data):
+    count = 0
+    for i in data:
+        count += len(i["replies"])
+    return len(data) + count
+
+
+def get_youtube_comments_and_replies(video_url):
+    options = Options()  # set False to watch it run
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--log-level=3")
+    driver = webdriver.Chrome(options=options)
+
+    print("[*] Opening YouTube video...")
+    driver.get(video_url)
+    time.sleep(2)
+
+    # Scroll to comments
+    driver.execute_script("window.scrollTo(0, 600);")
+    time.sleep(2)
+
+    print("[*] Scrolling to load all comments...")
+
+    last_height = driver.execute_script("return document.documentElement.scrollHeight")
+    scroll_attempts = 0
+
+    while scroll_attempts < 3:
+        driver.execute_script(
+            "window.scrollTo(0, document.documentElement.scrollHeight);"
+        )
+        time.sleep(3)
+        new_height = driver.execute_script(
+            "return document.documentElement.scrollHeight"
+        )
+        if new_height == last_height:
+            scroll_attempts += 1
+        else:
+            last_height = new_height
+            scroll_attempts = 0
+
+    # Expand all replies
+
+    print("[*] Expanding all replies...")
+
+    expanders = driver.find_elements(
+        By.XPATH, "//div[contains(@class, 'more-button') and @aria-expanded='false']"
+    )
+
+    print(f"Found {len(expanders)} hidden reply buttons.")
+
+    # Click buttons that are currently collapsed
+    for idx, expander in enumerate(expanders):
+        try:
+            button = expander.find_element(By.XPATH, ".//button")
+            driver.execute_script(
+                "arguments[0].scrollIntoView({block: 'center'});", button
+            )
+            time.sleep(1)
+            button.click()
+            # print(f"Clicked expand button {idx+1}")
+            time.sleep(1)
+
+        except Exception as e:
+            print(f"Could not click button {idx+1}: {e}")
+
+    print("[*] Extracting comments and replies...")
+
+    comments_data = []
+    threads = driver.find_elements(By.XPATH, "//ytd-comment-thread-renderer")
+
+    for thread in threads:
+        try:
+            # Top-level comment
+            main_comment = thread.find_element(By.ID, "content-text").text.strip()
+            main_author = thread.find_element(By.ID, "author-text").text.strip()
+
+            # Initialize replies list
+            replies = []
+
+            # Find the replies section within the current thread
+            reply_section = thread.find_elements(
+                By.XPATH, ".//ytd-comment-replies-renderer"
+            )
+
+            if reply_section:
+                while True:
+                    try:
+                        show_more = reply_section[0].find_element(
+                            By.XPATH, "//button[@aria-label='Show more replies']"
+                        )
+                        driver.execute_script("arguments[0].click();", show_more)
+                        time.sleep(1.5)
+                    except:
+                        break
+                # Find all reply elements within the replies section
+                reply_elements = reply_section[0].find_elements(
+                    By.XPATH, ".//ytd-comment-view-model"
+                )
+
+                for reply in reply_elements:
+
+                    reply_author_el = reply.find_element(
+                        By.XPATH, ".//a[@id='author-text']"
+                    )
+                    reply_text_el = reply.find_element(
+                        By.XPATH, ".//yt-attributed-string[@id='content-text']"
+                    )
+                    # print(reply_author_el, reply_text_el)
+                    reply_author = reply_author_el.text.strip()
+                    reply_comment = reply_text_el.text.strip()
+
+                    if reply_comment and reply_author:
+                        replies.append(
+                            {"author": reply_author, "comment": reply_comment}
+                        )
+
+            # Append main comment and its replies
+            comments_data.append(
+                {"author": main_author, "comment": main_comment, "replies": replies}
+            )
+
+        except Exception as e:
+            print(f"Error extracting comment block: {e}")
+            continue
+
+    driver.quit()
+
+    # Save data to JSON file
+    with open("youtube_comments_with_replies.json", "w", encoding="utf-8") as f:
+        json.dump(comments_data, f, ensure_ascii=False, indent=4)
+
+    print(
+        f"[✓] Scraped {count_json_length(comments_data)} comments with their replies."
+    )
+    with open("youtube_comments_with_replies.txt", "w", encoding="utf-8") as f:
+        for item in comments_data:
+            f.write(f"Comment: {item.get('comment', '')}\n")
+            replies = item.get("replies", [])
+            for reply in replies:
+                f.write(f"  ↳ Reply: {reply}\n")
+            f.write("\n")
+
+
+if __name__ == "__main__":
+    video_url = input("enter the youtube url: ")
+    get_youtube_comments_and_replies(video_url)
