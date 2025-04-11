@@ -68,7 +68,7 @@ pip install selenium requests
 ## ▶️ Running the Scraper
 
 ```bash
-python youtube_scraper.py
+python main.py
 ```
 
 Then paste a YouTube video URL when prompted.
@@ -125,3 +125,86 @@ for line in response.iter_lines(decode_unicode=True):
 - You can modify the browser visibility by setting `--headless` to `False`.
 
 ---
+## 🧪 Example Analysis: KSI Comedy Video Comments
+📹 **Video Analyzed:** [KSI Tries Not To Laugh Video](https://www.youtube.com/watch?v=JfUVGBWDJ_M)
+
+After scraping and analyzing the comments from a popular KSI video, here are the key findings based on sentiment, tone, and engagement:
+
+---
+
+### ✅ Positive Sentiment
+
+- Only **2%** of comments express positive sentiment (e.g., "Great job!", "I love this!").
+- Most comments are either **neutral or negative**, with a few containing profanity or personal attacks.
+
+---
+
+### ❌ Negative Sentiment
+
+- Over **70%** of comments contain negative words or phrases, such as:
+  - Derogatory terms for the creator (e.g., _"bum"_, _"thief"_)
+  - Criticisms of the content (e.g., _"boring"_, _"not funny"_)
+  - Personal attacks directed at other commenters
+- Some are dismissive or apathetic (e.g., _"I don't get it"_)
+
+---
+
+### 🧌 Trolling & Spam
+
+- Around **10%** of comments appear to be **spam or trolling** in nature:
+  - (e.g., _"Like none of them were funny"_, _"Let's see your forehead"_)
+- Some include **irrelevant or suspicious content** that doesn’t relate to the video.
+
+---
+
+### 💬 Engagement & Participation
+
+- Only about **5%** of commenters **engage in actual conversation** by replying to other comments.
+- The majority are **stand-alone reactions** without any follow-up discussion.
+
+---
+
+### 🗣️ Language & Tone
+
+- Language used is **informal**, often **abrasive or dismissive** in tone.
+- Multiple comments include **profanities** or **derogatory slurs**.
+- Repetition of critiques suggests a common pattern of discontent.
+
+---
+
+### 📉 Content Analysis
+
+- The video's content is seen as **unoriginal and formulaic**:
+  - (e.g., _"Man too forced some of these, people just do anything for views"_)
+- The creator seems to rely on **shock value** or **cheap laughs** rather than original humor.
+- Some comments suggest the **video is outdated** or lacks relevance.
+
+---
+
+### 🔍 Insights & Suggestions
+
+- **Viewer sentiment** is largely **disappointed or unimpressed**, leading to negative feedback.
+- The **creator may need to reconsider** their approach to comedy or content strategy.
+- **Low engagement** suggests a lack of strong community investment or repeat viewership.
+
+> ⚠️ _Disclaimer: This analysis reflects only the subset of users who left comments on this particular video. It may not represent the opinions of the entire audience._
+
+---
+
+## ⚙️ How to Set Up Ollama Locally
+
+Ollama allows you to run large language models locally with ease.
+
+### 1. 🖥 Install Ollama
+
+Download and install Ollama from the official website:  
+👉 [https://ollama.com](https://ollama.com)
+
+Choose your platform (macOS, Linux, Windows) and follow the installer instructions.
+
+### 2. 📦 Pull a Model
+
+You can pull any model like LLaMA 3.2:
+
+```bash
+ollama pull llama3.2
