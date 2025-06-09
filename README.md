@@ -5,7 +5,7 @@
 ```markdown
 # 📺 YouTube Comment Scraper + LLM Analysis via Ollama
 
-A Python-based automation tool to scrape YouTube comments and replies using Selenium, and analyze them with an LLM model (e.g., LLaMA 3) through Ollama's local API.
+A Python-based automation tool to scrape YouTube comments using Selenium, and analyze them with an LLM model (e.g., LLaMA 3) through Ollama's local API.
 
 ---
 
